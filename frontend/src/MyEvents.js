@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import {Button, Table} from '@material-ui/core/';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,20 +7,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Title from './Title';
-
-
-
-const testData = [
-  {"start_date": '16 Mar, 2019 15:00',"end_date": '16 Mar, 2019 16:00','title': 'Elvis Presley'},
-  {"start_date": '16 Mar, 2019 15:00',"end_date": '16 Mar, 2019 16:00','title': 'Elvis Presley'},
-  {"start_date": '16 Mar, 2019 15:00',"end_date": '16 Mar, 2019 16:00','title': 'Elvis Presley'},
-  {"start_date": '16 Mar, 2019 15:00',"end_date": '16 Mar, 2019 16:00','title': 'Elvis Presley'},
-  {"start_date": '16 Mar, 2019 15:00',"end_date": '16 Mar, 2019 16:00','title': 'Elvis Presley'}
-];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -34,6 +22,39 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MyEvents() {
   const classes = useStyles();
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'http://localhost:8000/api/events/?',{ params: {user:"1"} }
+      );
+
+      const newState = result.data.map(event => {
+        var newItem = Object.assign({}, event);
+        newItem.start = moment(event.start, 'YYYY-MM-DDTHH: mm: ss').format("YYYY.MM.DD HH:mm:ss");
+        newItem.end = moment(event.end, 'YYYY-MM-DDTHH: mm: ss').format("YYYY.MM.DD HH:mm:ss");
+        return newItem;
+      });
+      setEvents(newState);
+    };
+
+    fetchData();
+  }, []);
+
+  const deleteEvent = async (id) => {
+    const result = await axios.delete(
+      'http://localhost:8000/api/events/'+id
+    );
+    if(result.status == 204){
+      var newEvents = events.filter(function (obj) {
+        return obj.id !== id;
+      });
+      setEvents(newEvents)
+    }
+    console.log(result)
+  };
+
   return (
     <React.Fragment>
       <Title>My Events</Title>
@@ -47,12 +68,12 @@ export default function MyEvents() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {testData.map((event) => (
+          {events.map((event) => (
             <TableRow key={event.id}>
               <TableCell>{event.title}</TableCell>
-              <TableCell>{event.start_date}</TableCell>
-              <TableCell>{event.end_date}</TableCell>
-                  <TableCell align="center"><Button color="secondary" className={classes.normalText} variant="contained"><DeleteIcon />Delete</Button></TableCell>
+              <TableCell>{event.start}</TableCell>
+              <TableCell>{event.end}</TableCell>
+                  <TableCell align="center"><Button color="secondary" className={classes.normalText} variant="contained" onClick={() => deleteEvent(event.id)}><DeleteIcon />Delete</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>

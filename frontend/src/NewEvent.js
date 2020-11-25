@@ -7,10 +7,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField,Grid } from '@material-ui/core'
+import axios from 'axios';
+import moment from 'moment'
 
 const useStyles = makeStyles();
 
 export default function AlertDialog() {
+    const [newEvent, setNewEvent] = React.useState({user: 1});
+
     const [open, setOpen] = React.useState(false);
     const classes = useStyles();
 
@@ -21,6 +25,23 @@ export default function AlertDialog() {
     const handleClose = () => {
         setOpen(false);
     };
+    
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        let newValue = value;
+        setNewEvent(prevState => ({
+            ...prevState,
+            [name]: newValue
+        }));
+    }
+
+    const createEvent = async() => {
+        let res = await axios.post('http://localhost:8000/api/events/', newEvent);
+        if(res.status == 201){
+            setOpen(false);
+        }
+        console.log(res);
+    }
 
     return (
         <div>
@@ -46,9 +67,9 @@ export default function AlertDialog() {
                                         fullWidth
                                         id="event_title"
                                         label="Title"
-                                        name="event_title"
+                                        name="title"
                                         autoFocus
-                                        // onChange={handleChange}
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={6}>
@@ -56,11 +77,13 @@ export default function AlertDialog() {
                                         id="event_start"
                                         label="Start"
                                         type="datetime-local"
+                                        name="start"
                                         defaultValue={new Date()}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={6} >
@@ -68,11 +91,13 @@ export default function AlertDialog() {
                                         id="event_end"
                                         label="End"
                                         type="datetime-local"
+                                        name="end"
                                         defaultValue={new Date()}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
+                                        onChange={handleChange}
                                     />
                                 </Grid>
                             </Grid>
@@ -80,7 +105,7 @@ export default function AlertDialog() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary" variant="contained" autoFocus>
+                    <Button onClick={createEvent} color="primary" variant="contained" autoFocus>
                         Create
                     </Button>
                 </DialogActions>

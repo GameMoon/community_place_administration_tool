@@ -1,36 +1,38 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
 import Title from './Title'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
 import { Box } from '@material-ui/core'
-import Button from '@material-ui/core/Button';
 import NewEvent from './NewEvent'
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import {useState,useEffect} from 'react';
+import axios from 'axios';
+import moment from 'moment'
 
 const localizer = momentLocalizer(moment)
-function preventDefault(event) {
-    event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-    seeMore: {
-        marginTop: theme.spacing(3),
-    },
-}));
 
 
 const Events = ({ component: Component, ...rest }) => {
-    const myEvents =  [
-      {
-            start: moment().toDate(),
-            end: moment()
-                 .add(1, "days")
-                .toDate(),
-            title: "Some title"
-      }
-    ]
+ 
+    const [events,setEvents] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await axios(
+                'http://localhost:8000/api/events/',
+            );
+                
+            const newState = result.data.map(event => {
+                var newItem = Object.assign({}, event);
+                newItem.start = moment(event.start,'YYYY-MM-DDTHH: mm: ss').toDate();
+                newItem.end = moment(event.end, 'YYYY-MM-DDTHH: mm: ss').toDate();
+                return newItem;
+            });
+            console.log(result.data)
+            setEvents(newState);
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <React.Fragment>
@@ -41,7 +43,7 @@ const Events = ({ component: Component, ...rest }) => {
                         
         <Calendar
             localizer={localizer}
-            events={myEvents}
+            events={events}
             defaultDate={new Date()}
             defaultView="week"
             style={{ height: 500 }}
