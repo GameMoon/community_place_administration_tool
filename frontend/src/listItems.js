@@ -11,26 +11,26 @@ import Message from '@material-ui/icons/Message';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import {Link} from 'react-router-dom';
 
+
+const handleClick = (target) =>{
+    window.location = target
+}
 export const mainListItems = (
   <div>
-    <ListItem button href="/dashboard">
-    <ListItemIcon>
-        <DashboardIcon />
-    </ListItemIcon>
-    <ListItemText primary="Dashboard" />
-    </ListItem>
-    {/* <ListItem button>
+    <ListItem button onClick={() => handleClick('/dashboard')}>
       <ListItemIcon>
-        <Message />
+          <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Messages" />
-    </ListItem> */}
-    <ListItem button>
+      <ListItemText primary="Dashboard"/>
+    </ListItem>
+
+    <ListItem button onClick={() => handleClick('/events')} >
       <ListItemIcon>
         <CalendarToday />
       </ListItemIcon>
-      <ListItemText primary="Booking" />
+      <ListItemText primary="Events" />
     </ListItem>
+
     <ListItem button>
       <ListItemIcon>
         <Archive />
