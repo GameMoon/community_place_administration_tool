@@ -2,14 +2,9 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
 import Archive from '@material-ui/icons/Archive';
-import Message from '@material-ui/icons/Message';
 import CalendarToday from '@material-ui/icons/CalendarToday';
-import {Link} from 'react-router-dom';
 
 
 const handleClick = (target) =>{
@@ -31,7 +26,7 @@ export const mainListItems = (
       <ListItemText primary="Events" />
     </ListItem>
 
-    <ListItem button>
+    <ListItem button onClick={() => handleClick('/archive')}>
       <ListItemIcon>
         <Archive />
       </ListItemIcon>
