@@ -10,6 +10,7 @@ import Title from './Title';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment'
+import { BACKEND_URL } from './config';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -27,7 +28,7 @@ export default function MyEvents() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        'http://localhost:8000/api/events/?',{ params: {user:"1"} }
+        BACKEND_URL +'/events/?',{ params: {user:"1"} }
       );
 
       const newState = result.data.map(event => {
@@ -44,9 +45,9 @@ export default function MyEvents() {
 
   const deleteEvent = async (id) => {
     const result = await axios.delete(
-      'http://localhost:8000/api/events/'+id
+      BACKEND_URL+'/events/'+id
     );
-    if(result.status == 204){
+    if(result.status === 204){
       var newEvents = events.filter(function (obj) {
         return obj.id !== id;
       });

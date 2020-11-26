@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField,Grid } from '@material-ui/core'
 import axios from 'axios';
-import moment from 'moment'
+import {BACKEND_URL} from './config'
 
 const useStyles = makeStyles();
 
@@ -36,8 +36,8 @@ export default function AlertDialog() {
     }
 
     const createEvent = async() => {
-        let res = await axios.post('http://localhost:8000/api/events/', newEvent);
-        if(res.status == 201){
+        let res = await axios.post(BACKEND_URL+'/events/', newEvent);
+        if(res.status === 201){
             setOpen(false);
         }
         console.log(res);

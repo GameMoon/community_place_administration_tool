@@ -7,9 +7,9 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import moment from 'moment'
+import { BACKEND_URL} from './config'
 
 const localizer = momentLocalizer(moment)
-
 
 const Events = ({ component: Component, ...rest }) => {
  
@@ -18,7 +18,7 @@ const Events = ({ component: Component, ...rest }) => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await axios(
-                'http://localhost:8000/api/events/',
+                BACKEND_URL + '/events/',
             );
                 
             const newState = result.data.map(event => {
