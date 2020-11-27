@@ -20,6 +20,7 @@ from cpa_tool import views
 
 router = routers.DefaultRouter()
 router.register(r'events', views.EventView, 'event')
+router.register(r'archive', views.ArchiveView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -13,3 +13,9 @@ class Event(models.Model):
   title = models.CharField(max_length=120)
   start = models.DateTimeField()
   end = models.DateTimeField()
+
+class ArchiveDate(models.Model):
+  date = models.DateField()
+
+class ArchiveEntry(models.Model):
+  time = models.TimeField()
