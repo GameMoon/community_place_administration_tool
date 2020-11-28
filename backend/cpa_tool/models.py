@@ -19,3 +19,4 @@ class ArchiveDate(models.Model):
 
 class ArchiveEntry(models.Model):
   time = models.TimeField()
+  link = models.CharField(max_length=64)

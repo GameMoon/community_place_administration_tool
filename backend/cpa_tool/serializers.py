@@ -15,4 +15,4 @@ class ArchiveDateSerializer(serializers.ModelSerializer):
 class ArchiveEntrySerializer(serializers.ModelSerializer):
   class Meta:
     model = ArchiveEntry
-    fields = ('time',)
+    fields = ('time', 'link')
