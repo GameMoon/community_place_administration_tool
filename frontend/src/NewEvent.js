@@ -35,12 +35,19 @@ export default function AlertDialog() {
         }));
     }
 
-    const createEvent = async() => {
-        let res = await axios.post(BACKEND_URL+'/events/', newEvent);
-        if(res.status === 201){
-            setOpen(false);
-        }
-        console.log(res);
+    const createEvent = () => {
+        console.log(newEvent)
+        axios.post(BACKEND_URL + '/events/', newEvent)
+        .then(res => {
+            if (res.status === 201) {
+                setOpen(false);
+            }
+            console.log(res);
+        })
+        .catch(error => {
+            console.log(error)
+        });
+       
     }
 
     return (

@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {useState} from 'react';
+import axios from 'axios';
+import { BACKEND_URL, SNACKBAR_ERROR_OPTIONS } from './config';
+import { useSnackbar } from 'react-simple-snackbar'
 
 function Copyright() {
   return (
@@ -47,13 +50,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function SignIn() {
   const classes = useStyles();
-  const [form, setForm] = useState({})
+  const [form, setForm] = useState({});
+  const [openSnackbar, closeSnackbar] = useSnackbar(SNACKBAR_ERROR_OPTIONS)
 
   const startLogin = (e) =>{
     console.log(form);
-    window.location = "/dashboard";
+
+    axios.post(BACKEND_URL + '/user/login', form)
+      .then(res => {
+        if(res.status == 200 && res.data.token){
+          sessionStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("email", form.username)
+          window.location = "/dashboard";
+        }
+      })
+      .catch(error => {
+        if (error.response.data){
+          let message = Object.values(error.response.data)[0][0]
+          openSnackbar(message)
+        }
+      });
     e.preventDefault();
   }
 
@@ -81,9 +101,9 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="username"
             label="Email Address"
-            name="email"
+            name="username"
             autoComplete="email"
             autoFocus
             onChange={handleChange}

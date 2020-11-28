@@ -4,7 +4,7 @@ import { Redirect, Route } from 'react-router-dom'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 
-  const isLoggedIn = true//sessionStorage.getItem("token")
+  const isLoggedIn = sessionStorage.getItem("token")
   
   return (
     <Route

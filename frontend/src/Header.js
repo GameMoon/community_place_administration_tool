@@ -12,7 +12,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import {mainListItems} from './listItems'
 
 const useStyles = makeStyles((theme) => ({
@@ -106,6 +109,11 @@ export default function Header(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    
+    const logOut = () => {
+        sessionStorage.clear()
+        window.location = "/"
+    };
 
     return (
         <>
@@ -124,6 +132,7 @@ export default function Header(props) {
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     {props.title}
           </Typography>
+                {sessionStorage.getItem("email")}
                 {/* <IconButton color="inherit">
                     <Badge badgeContent={''} color="secondary" href="/dashboard">
                         <NotificationsIcon />
@@ -145,6 +154,13 @@ export default function Header(props) {
             </div>
             <Divider />
             <List>{mainListItems}</List>
+            <Divider />
+            <ListItem button onClick={logOut}>
+                <ListItemIcon>
+                    <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary="LogOut" />
+            </ListItem>
         </Drawer>
         </>
     );

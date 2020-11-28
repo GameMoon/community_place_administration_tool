@@ -59,7 +59,7 @@ const Messages = ({ component: Component, ...rest }) => {
         <>
         <Title>Messages</Title>
         <Box textAlign="left" position="relative"style={{overflow: "hidden"}}>
-            <Box id="chat_container" style={{overflow: 'scroll', "overflow-x": 'hidden'}} height="370px" maxHeight="370px" >
+            <Box id="chat_container" style={{overflow: 'scroll', overflowX: 'hidden'}} height="370px" maxHeight="370px" >
                 <ChatList
                     className='chat-list'
                     dataSource={messages} />

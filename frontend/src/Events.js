@@ -19,6 +19,11 @@ const Events = ({ component: Component, ...rest }) => {
         const fetchData = async () => {
             const result = await axios(
                 BACKEND_URL + '/events/',
+                {
+                    headers: {
+                        'Authorization': `token ${sessionStorage.getItem('token')}`
+                    }
+                }
             );
                 
             const newState = result.data.map(event => {
