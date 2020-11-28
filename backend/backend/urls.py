@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
 from cpa_tool import views
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
 router.register(r'events', views.EventView, 'event')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/user/register', views.UserCreate.as_view()),
+    path('api/user/login', obtain_auth_token, name="api_token_auth"),
+    path('api/', include(router.urls)),
 ]
