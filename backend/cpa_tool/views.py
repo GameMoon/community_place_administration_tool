@@ -55,6 +55,7 @@ class ArchiveView(viewsets.ModelViewSet):
         for entry in entries:
           obj = ArchiveEntry()
           obj.time = self._parseTime(entry['name'])
+          obj.link = entry['id']
           converted.append(obj)
         converted.sort(
           key = lambda x: x.time,
