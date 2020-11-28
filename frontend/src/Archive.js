@@ -1,20 +1,17 @@
 import React from 'react';
-import { Grid, Box, Container } from '@material-ui/core/';
+import { Box, Container } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import FolderIcon from '@material-ui/icons/Folder';
+import ImageIcon from '@material-ui/icons/Image';
 import Header from './Header'
 import Copyright from './Copyright'
-import clsx from 'clsx'
 import { BACKEND_URL } from './config'
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
 import axios from 'axios';
-import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,8 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Archive = ({ component: Component, ...rest }) => {
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    
     const [dates,setDates] = useState([]);
 
     useEffect(() => {
@@ -75,24 +70,28 @@ const Archive = ({ component: Component, ...rest }) => {
                 <Container maxWidth="lg" className={classes.container}>
                     <List>
                       { dates.map((value) => {
-                        var link = "#";
-                        var target = "_self";
                         if (value.date)
-                          link = "archive/" + value.date;
-                        else if (value.link) {
-                          link = "https://drive.google.com/file/d/" + value.link + "/view";
-                          target = "_blank"
-                        }
-                        return(
-                          <ListItem key={value} component="a" href={link} target={target}>
-                            <ListItemIcon>
-                              <FolderIcon />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={value.date ? value.date : value.time}
-                            />
-                          </ListItem>
-                        );
+                          return(
+                            <ListItem key={value} component="a" href={"archive/" + value.date}>
+                              <ListItemIcon>
+                                <FolderIcon />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={value.date}
+                              />
+                            </ListItem>
+                          );
+                        else
+                          return(
+                            <ListItem key={value} component="a" href={"https://drive.google.com/file/d/" + value.link + "/view"} target="_blank">
+                              <ListItemIcon>
+                                <ImageIcon />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={value.time}
+                              />
+                            </ListItem>
+                          );
                       })}
                     </List>
                     <Box pt={4}>
