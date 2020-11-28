@@ -1,1 +1,3 @@
 frontend/.eslintcache
+backend/credentials.json
+backend/token.pickle

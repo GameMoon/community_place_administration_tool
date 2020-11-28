@@ -1,12 +1,11 @@
 
 from rest_framework import serializers
-from .models import Event
-from .models import User
+from .models import Event, ArchiveDate, ArchiveEntry, User
 
 class EventSerializer(serializers.ModelSerializer):
   class Meta:
     model = Event
-    fields = ('id','user', 'title', 'start', 'end')
+    fields = ('id', 'user', 'title', 'start', 'end')
     # lookup_field = 'title'
 
 
@@ -22,3 +21,12 @@ class UserSerializer(serializers.ModelSerializer):
       user.set_password(password)
       user.save()
       return user
+class ArchiveDateSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = ArchiveDate
+    fields = ('date',)
+
+class ArchiveEntrySerializer(serializers.ModelSerializer):
+  class Meta:
+    model = ArchiveEntry
+    fields = ('time', 'link')
