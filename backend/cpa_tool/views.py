@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework import generics
+from rest_framework import generics, status
 from .serializers import EventSerializer
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny
@@ -15,6 +15,9 @@ from rest_framework.response import Response
 from .serializers import EventSerializer, ArchiveDateSerializer, ArchiveEntrySerializer
 from .models import Event, ArchiveDate, ArchiveEntry, User
 from .gdrive import GDrive
+from rest_framework.decorators import action
+from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 class EventView(viewsets.ModelViewSet):   
@@ -23,6 +26,35 @@ class EventView(viewsets.ModelViewSet):
   queryset = Event.objects.all()     
   filterset_fields = ('user',)
   
+  def create(self, request, *args, **kwargs):
+      request.data['user'] = Token.objects.get(key=request.auth.key).user_id
+      serializer = EventSerializer(data=request.data)
+      try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+      except ValidationError:
+          return Response({"errors": (serializer.errors,)},
+                          status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    user_id = Token.objects.get(key=request.auth.key).user_id
+    event = Event.objects.get(pk=self.kwargs['pk'])
+    if event.user.pk == user_id:
+       instance = self.get_object()
+       self.perform_destroy(instance)
+       return Response(status=status.HTTP_204_NO_CONTENT)
+    else:  return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+  @action(detail=False, methods=['get'])
+  def get_own(self, request, pk=None):
+    user_id = Token.objects.get(key=request.auth.key).user_id
+    serializer = EventSerializer(Event.objects.filter(user = user_id),many="true")
+    return Response(serializer.data)
+
+
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
