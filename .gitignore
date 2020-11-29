@@ -1,3 +1,6 @@
 frontend/.eslintcache
 backend/credentials.json
 backend/token.pickle
+backend/celerybeat-schedule.bak
+backend/celerybeat-schedule.dat
+backend/celerybeat-schedule.dir
