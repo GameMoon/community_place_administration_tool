@@ -160,7 +160,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'chat_notification_sender': {
         'task': 'chat.tasks.check_events',
-        'schedule': 60.0,
+        'schedule': 60.1,
         'args': []
     }
 }
