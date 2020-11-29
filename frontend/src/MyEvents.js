@@ -28,9 +28,13 @@ export default function MyEvents() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        BACKEND_URL +'/events/?',{ params: {user:"1"} }
+        BACKEND_URL +'/events/get_own',
+        { 
+          headers: {
+            'Authorization': `token ${sessionStorage.getItem('token')}`
+          },
+        }
       );
-
       const newState = result.data.map(event => {
         var newItem = Object.assign({}, event);
         newItem.start = moment(event.start, 'YYYY-MM-DDTHH: mm: ss').format("YYYY.MM.DD HH:mm:ss");
@@ -45,7 +49,12 @@ export default function MyEvents() {
 
   const deleteEvent = async (id) => {
     const result = await axios.delete(
-      BACKEND_URL+'/events/'+id
+      BACKEND_URL+'/events/'+id,
+      {
+        headers: {
+          'Authorization': `token ${sessionStorage.getItem('token')}`
+        }
+      }
     );
     if(result.status === 204){
       var newEvents = events.filter(function (obj) {
@@ -74,7 +83,7 @@ export default function MyEvents() {
               <TableCell>{event.title}</TableCell>
               <TableCell>{event.start}</TableCell>
               <TableCell>{event.end}</TableCell>
-                  <TableCell align="center"><Button color="secondary" className={classes.normalText} variant="contained" onClick={() => deleteEvent(event.id)}><DeleteIcon />Delete</Button></TableCell>
+              <TableCell align="center"><Button color="secondary" className={classes.normalText} variant="contained" onClick={() => deleteEvent(event.id)}><DeleteIcon />Delete</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>

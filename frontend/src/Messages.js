@@ -13,13 +13,15 @@ const Messages = ({ component: Component, ...rest }) => {
 
     const [newMessage, setNewMessage] = useState("");
     const [isPaused, setPause] = useState(false);
+    const [isActive, setActive] = useState(false);
+
     const ws = useRef(null);
     const chatContainerRef = useRef()
 
     useEffect(() => {
         ws.current = new WebSocket(WEBSOCKET_URL);
-        ws.current.onopen = () => console.log("ws opened");
-        ws.current.onclose = () => console.log("ws closed");
+        ws.current.onopen = () => {console.log("ws opened"); setActive(true)}
+        ws.current.onclose = () => { console.log("ws closed"); setActive(false)}
 
         return () => {
             ws.current.close();
@@ -47,7 +49,7 @@ const Messages = ({ component: Component, ...rest }) => {
     }
 
     const sendMessage = () => {
-        ws.current.send(JSON.stringify({message: newMessage}))
+        ws.current.send(JSON.stringify({"token": sessionStorage.getItem("token"), message: newMessage}))
         setNewMessage("")
     };
 
@@ -75,6 +77,7 @@ const Messages = ({ component: Component, ...rest }) => {
                         onChange={(e) => { setNewMessage(e.target.value); }}
                         onKeyDown={handleKeyDown}
                         value={newMessage}
+                        disabled={!isActive}
                         multiline />
                     <Box>
                         <Button size="small" color="primary" variant="contained" onClick={sendMessage}>

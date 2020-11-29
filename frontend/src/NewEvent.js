@@ -37,10 +37,15 @@ export default function AlertDialog() {
 
     const createEvent = () => {
         console.log(newEvent)
-        axios.post(BACKEND_URL + '/events/', newEvent)
+        axios.post(BACKEND_URL + '/events/', newEvent, {
+            headers: {
+                'Authorization': `token ${sessionStorage.getItem('token')}`
+            }
+        })
         .then(res => {
             if (res.status === 201) {
                 setOpen(false);
+                window.location.reload()
             }
             console.log(res);
         })
